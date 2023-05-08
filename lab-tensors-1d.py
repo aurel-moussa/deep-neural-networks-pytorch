@@ -211,3 +211,53 @@ sin_result = torch.sin(pi_tensor)
 plt.plot(pi_tensor.numpy(), sin_result.numpy())
 
 #TENSOR OPERATIONS
+
+u = torch.tensor([1, 0])
+v = torch.tensor([0, 1])
+w = u + v
+print("The result tensor: ", w)
+
+#Plotting using our plotting helper function to see the addition
+plotVec([
+    {"vector": u.numpy(), "name": 'u', "color": 'r'},
+    {"vector": v.numpy(), "name": 'v', "color": 'b'},
+    {"vector": w.numpy(), "name": 'w', "color": 'g'}
+])
+
+#Adding scalar to vector
+u = torch.tensor([1, 2, 3, -1])
+v = u + 1
+print ("Addition Result: ", v)
+
+#Multiplying vector by scalar
+# tensor * scalar
+
+u = torch.tensor([1, 2])
+v = 2 * u
+print("The result of 2 * u: ", v)
+
+#Multipyling vectors
+# tensor * tensor
+
+u = torch.tensor([1, 2])
+v = torch.tensor([3, 2])
+w = u * v
+print ("The result of u * v", w)
+
+#The result is simply tensor([3, 4]). 
+#This result is achieved by multiplying every element in u with the corresponding element in the same position v,
+#which is similar to [1 * 3, 2 * 2].
+
+#Dot Product
+# Calculate dot product of u, v
+
+u = torch.tensor([1, 2])
+v = torch.tensor([3, 2])
+
+print("Dot Product of u, v:", torch.dot(u,v))
+
+#The result is tensor(7). The function is 1 x 3 + 2 x 2 = 7.
+
+
+
+      
