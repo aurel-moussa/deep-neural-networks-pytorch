@@ -8,6 +8,8 @@ import torch
 #HELPER FUNCTION FOR VISUALIZATION
 # The class for plotting
 
+# The class for plotting
+
 class plot_diagram():
     
     # Constructor
@@ -18,7 +20,7 @@ class plot_diagram():
         self.X = X.numpy()
         self.Y = Y.numpy()
         self.parameter_values = torch.arange(start, stop)
-        self.Loss_function = [criterion(forward(X), Y) for w.data in self.parameter_values] 
+        self.Loss_function = [criterion(forward(X), Y).detach() for w.data in self.parameter_values] 
         w.data = start
         
     # Executor
@@ -32,10 +34,10 @@ class plot_diagram():
         plt.ylim(-20, 20)
         plt.subplot(211)
         plt.title("Data Space (top) Estimated Line (bottom) Iteration " + str(n))
-        plt.plot(self.parameter_values.numpy(), self.Loss_function)   
+        plt.plot(self.parameter_values.numpy(), torch.tensor(self.Loss_function).numpy()) 
         plt.plot(self.parameter, self.error, 'ro')
         plt.xlabel("B")
-        plt.figure()
+        plt.show()
     
     # Destructor
     def __del__(self):
@@ -99,7 +101,7 @@ def train_model(iter):
         # calculate the iteration
         loss = criterion(Yhat,Y)
         
-        # plot the diagram for us to have a better idea
+        # plot the diagram for us to have a better idea of what the loss looks like
         gradient_plot(Yhat, w, loss.item(), epoch)
         
         # store the loss into list
@@ -113,3 +115,43 @@ def train_model(iter):
         
         # zero the gradients before running the backward pass
         w.grad.data.zero_()
+        
+# Give 4 iterations for training the model here.
+train_model(4)     
+
+# Plot the loss for each iteration
+plt.plot(LOSS)
+plt.tight_layout()
+plt.xlabel("Epoch/Iterations")
+plt.ylabel("Cost")
+
+#Let us start with a w of -15
+w = torch.tensor(-15.0,requires_grad=True)
+#Create LOSS2 list
+LOSS2 = []
+gradient_plot1 = plot_diagram(X, Y, w, stop = 15)
+
+def train_model(iter):
+    for epoch in range (iter):
+        
+        # make the prediction as we learned in the last lab
+        Yhat = forward(X)
+        
+        # calculate the iteration
+        loss = criterion(Yhat,Y)
+        
+        # plot the diagram for us to have a better idea of what the loss looks like
+        gradient_plot1(Yhat, w, loss.item(), epoch)
+        
+        # store the loss into list
+        LOSS2.append(loss.item())
+        
+        # backward pass: compute gradient of the loss with respect to all the learnable parameters
+        loss.backward()
+        
+        # updata parameters
+        w.data = w.data - lr * w.grad.data
+        
+        # zero the gradients before running the backward pass
+        w.grad.data.zero_()
+train_model(4)
